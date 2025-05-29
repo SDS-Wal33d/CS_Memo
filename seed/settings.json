@@ -1,0 +1,23 @@
+{
+  "venueName": "University Conference Center",
+  "venueAddress": "Main Campus, Building 5",
+  "eventEndTime": "2025-05-28T17:07:00Z",
+  "eventDescription": "Full day event with breaks",
+  "capacityStatus": "Limited seats available",
+  "conferenceDateTime": "2025-05-28T17:10:00Z",
+  "projectSubmissionStart": "2025-05-28T17:00:00Z",
+  "projectSubmissionEnd": "2025-05-28T17:00:00Z",
+  "seatReservationStart": "2025-05-28T17:00:00Z",
+  "seatReservationEnd": "2025-05-28T17:00:00Z",
+  "attendeeTypes": [
+    {
+      "name": "Student"
+    },
+    {
+      "name": "Faculty"
+    },
+    {
+      "name": "Industry Partners"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../server/lib/generated/prisma"
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id           String   @id
+  passwordHash String
+  admin        Admin?
+  student      Student?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Student {
+  id       String   @id
+  user     User     @relation(fields: [id], references: [id], onDelete: Cascade)
+  fullname String
+  email    String   @unique
+  project  Project?
+}
+
+model TeamMember {
+  id        String   @id
+  Project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String?
+  fullname  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String       @id @default(uuid())
+  authorId    String       @unique
+  author      Student      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  category    String
+  techStack   String
+  teamName    String
+  members     TeamMember[]
+  status      Status       @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Admin {
+  id       String    @id
+  user     User      @relation(fields: [id], references: [id], onDelete: Cascade)
+  settings Settings?
+}
+
+model AttendeeType {
+  id         String     @id @default(nanoid())
+  settingsId String
+  settings   Settings   @relation(fields: [settingsId], references: [id], onDelete: Cascade)
+  name       String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  Attendee   Attendee[]
+}
+
+model Settings {
+  id                     String         @id @default(uuid())
+  adminId                String         @unique
+  admin                  Admin          @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  venueName              String
+  venueAddress           String
+  eventEndTime           DateTime       @db.Time()
+  eventDescription       String
+  capacityStatus         String
+  attendeeTypes          AttendeeType[]
+  conferenceDateTime     DateTime
+  projectSubmissionStart DateTime       @db.Date()
+  projectSubmissionEnd   DateTime       @db.Date()
+  seatReservationStart   DateTime       @db.Date()
+  seatReservationEnd     DateTime       @db.Date()
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+}
+
+model Attendee {
+  id             String       @id @default(uuid())
+  fullname       String
+  email          String       @unique
+  phone          String
+  department     String
+  ticket         String?
+  attendeeType   AttendeeType @relation(fields: [attendeeTypeId], references: [id], onDelete: Cascade)
+  attendStatus   Status       @default(PENDING)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  attendeeTypeId String
+}
